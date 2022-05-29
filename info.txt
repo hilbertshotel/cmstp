@@ -1,0 +1,6 @@
+1. put msadd & msget in containers
+2. create nginx container that serves frontend and serves as reverse proxy for both apis
+3. create database container with .sql file already applied
+4. run all containers on localhost see if they work
+5. if yes, deploy on lightsail see if they work
+6. if yes, start the kubernetes tutorial and transfer the app there
