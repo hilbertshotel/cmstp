@@ -1,0 +1,4 @@
+{
+  "HostAddr": "0.0.0.0:6789",
+  "ConnStr":  "user=postgres password=asd dbname=asd sslmode=disable host=get_container port=8888"
+}

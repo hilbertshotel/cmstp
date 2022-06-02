@@ -1,4 +1,4 @@
-module msget
+module cmstp_get
 
 go 1.18
 

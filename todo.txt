@@ -1,0 +1,1 @@
+1. push the database container on own server and try to connect to it

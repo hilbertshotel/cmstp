@@ -1,8 +1,8 @@
 package router
 
 import (
+	"cmstp_get/logger"
 	"database/sql"
-	"msget/logger"
 	"net/http"
 )
 

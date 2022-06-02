@@ -1,10 +1,10 @@
 package main
 
 import (
+	"cmstp_get/config"
+	"cmstp_get/logger"
+	"cmstp_get/router"
 	"database/sql"
-	"msget/config"
-	"msget/logger"
-	"msget/router"
 	"net/http"
 	"time"
 
