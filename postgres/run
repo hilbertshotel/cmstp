@@ -1,0 +1,1 @@
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD= --name cmstp_postgres_container --restart unless-stopped cmstp_postgres_image
