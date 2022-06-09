@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: get-deployment
+  labels:
+    app: get-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: get-deployment
+  template:
+    metadata:
+      labels:
+        app: get-deployment
+    spec:
+      containers:
+      - name: get-deployment
+        image: hilbertshotel/cmstp:latest
+        ports:
+        - containerPort: 6789
+        env:
+          - name: HOST_ADDR
+            value: 0.0.0.0:6789
+          - name: DB_URL
+            value: "host=localhost user=postgres dbname=db sslmode=disable"

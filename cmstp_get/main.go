@@ -1,11 +1,11 @@
 package main
 
 import (
-	"cmstp_get/config"
 	"cmstp_get/logger"
 	"cmstp_get/router"
 	"database/sql"
 	"net/http"
+	"os"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -13,18 +13,15 @@ import (
 
 func main() {
 
+	// env
+	hostAddr := os.Getenv("HOST_ADDR")
+	dbUrl := os.Getenv("DB_URL")
+
 	// logger
 	log := logger.Init()
 
-	// config
-	cfg, err := config.Init()
-	if err != nil {
-		log.Error(err)
-		return
-	}
-
 	// database
-	db, err := sql.Open("postgres", cfg.ConnStr)
+	db, err := sql.Open("postgres", dbUrl)
 	if err != nil {
 		log.Error(err)
 		return
@@ -32,7 +29,7 @@ func main() {
 
 	// server
 	server := http.Server{
-		Addr:         cfg.HostAddr,
+		Addr:         hostAddr,
 		Handler:      router.Mux(db, log),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -42,7 +39,7 @@ func main() {
 	errch := make(chan error)
 
 	go func(errch chan error) {
-		log.Ok("Now listening on " + cfg.HostAddr)
+		log.Ok("Now listening on " + hostAddr)
 		errch <- server.ListenAndServe()
 	}(errch)
 

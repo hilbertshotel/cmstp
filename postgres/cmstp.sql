@@ -7,7 +7,6 @@ CREATE TABLE users (
   name VARCHAR (100) NOT NULL 
 );
 
-INSERT INTO users (name) VALUES ('boce');
-INSERT INTO users (name) VALUES ('koce');
-INSERT INTO users (name) VALUES ('unknown');
-INSERT INTO users (name) VALUES ('kolu');
+INSERT INTO users (name) VALUES ('Charlie');
+INSERT INTO users (name) VALUES ('Bobbie');
+INSERT INTO users (name) VALUES ('Merry');
