@@ -1,22 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: psql-deployment
-  labels:
-    app: psql-deployment
+  name: psql-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: psql-deployment
+      app: psql-depl
   template:
     metadata:
       labels:
-        app: psql-deployment
+        app: psql-depl
     spec:
       containers:
-      - name: psql-deployment
-        image: hilbertshotel/cmstp-psql:latest
+      - name: psql-depl
+        image: docker.io/hilbertshotel/psql
         ports:
         - containerPort: 5432
         env:
@@ -29,4 +27,16 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: psql-secret
-                key: psql-password 
+                key: psql-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: psql-svc
+spec:
+  selector:
+    app: psql-depl
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

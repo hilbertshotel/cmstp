@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: get-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: get-depl
+  template:
+    metadata:
+      labels:
+        app: get-depl
+    spec:
+      containers:
+      - name: get-depl
+        image: docker.io/hilbertshotel/get
+        ports:
+        - containerPort: 6789
+        env:
+          - name: HOST_ADDR
+            valueFrom:
+              configMapKeyRef:
+                name: cfmap
+                key: host-addr
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: cfmap
+                key: db-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: get-svc
+spec:
+  selector:
+    app: get-depl
+  ports:
+    - protocol: TCP
+      port: 6789
+      targetPort: 6789

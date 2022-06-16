@@ -1,4 +1,4 @@
-module cmstp_get
+module get
 
 go 1.18
 

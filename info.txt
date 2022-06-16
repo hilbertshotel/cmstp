@@ -1,6 +1,10 @@
-1. put msadd & msget in containers
-2. create nginx container that serves frontend and serves as reverse proxy for both apis
-3. create database container with .sql file already applied
-4. run all containers on localhost see if they work
-5. if yes, deploy on lightsail see if they work
-6. if yes, start the kubernetes tutorial and transfer the app there
+0. remove eks cluster
+1. deploy simple go frontend + one endpoint that talks to my minikube cluster
+2. deploy my minikube cluster as usual
+3. at a stateful set for the database
+4. at ingress or just find a way to talk with my frontend endpoint
+
+checkout HELM
+checkout LENS
+checkout kubebuilder
+checkout KIND?

@@ -1,12 +1,9 @@
-CREATE DATABASE asd;
+CREATE DATABASE test;
 
-\c asd
+\c test
 
-CREATE TABLE users (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR (100) NOT NULL 
+CREATE TABLE test (
+  data TEXT
 );
 
-INSERT INTO users (name) VALUES ('Charlie');
-INSERT INTO users (name) VALUES ('Bobbie');
-INSERT INTO users (name) VALUES ('Merry');
+INSERT INTO users (name) VALUES ('some test string');

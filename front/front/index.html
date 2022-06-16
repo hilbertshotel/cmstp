@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        body {
+            background-color: antiquewhite;
+            text-align: center;
+            margin: 3rem;
+        }
+
+        input, button, body {
+            font-size: 2rem;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div>GET SOMETHING FROM K8S DB</div>
+    <input id="addr" type="text" placeholder="endpoint address">
+    <button id="get" onclick="get()">GET</button>
+    <div id="out"></div>
+
+    <script>
+
+        const get = async () => {
+            const out = document.getElementById("out")
+            const addr = document.getElementById("addr").value
+            if (addr === "") {}
+
+            const response = await fetch(addr)
+            if (response.ok) {
+                const data = await response.json()
+                out.innerHTML = "ok"
+                console.log(data)
+            } else {
+                out.innerHTML = response.statusText
+            }
+        }
+
+    </script>
+</body>
+</html>
