@@ -1,10 +1,29 @@
-0. remove eks cluster
-1. deploy simple go frontend + one endpoint that talks to my minikube cluster
-2. deploy my minikube cluster as usual
-3. at a stateful set for the database
-4. at ingress or just find a way to talk with my frontend endpoint
+[ADD USER TO DOCKER GROUP]
+sudo groupadd docker
+sudo usermod -aG docker <user>
+sudo systemctl restart docker
+restart shell
 
-checkout HELM
-checkout LENS
-checkout kubebuilder
-checkout KIND?
+[PUSH TO DOCKER HUB]
+docker login --username hilbertshotel
+docker tag <image> <repo>
+docker push <repo>
+
+[RESTART DEPLOYMENT]
+kubectl rollout restart deployment <name> -n <namespace>
+
+[BASE 64 FOR SECRETS]
+echo -n <string> | base64
+
+[DEBUG PODS]
+kubectl exec -it <pod name> -- /bin/bash
+
+[GET INFO]
+kubectl describe <component> <name>
+kubectl get pod -o wide
+
+[DOCKER BUILD]
+docker build -t <image> .
+
+study:
+HELM, LENS, KUBEBUILDER, EKS, CLOUDFORMATION

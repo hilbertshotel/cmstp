@@ -1,0 +1,176 @@
+#################### APP ####################
+
+# CONFIG
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cfmap
+data:
+  host-addr: ':6789'
+  db-url: 'port=5432 host=psql-svc dbname=test user=postgres password=postgres sslmode=disable'
+
+# DEPLOYMENT
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: get-depl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: get-depl
+  template:
+    metadata:
+      labels:
+        app: get-depl
+    spec:
+      containers:
+      - name: get-depl
+        image: docker.io/hilbertshotel/get
+        ports:
+        - containerPort: 6789
+        env:
+          - name: HOST_ADDR
+            valueFrom:
+              configMapKeyRef:
+                name: cfmap
+                key: host-addr
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: cfmap
+                key: db-url
+
+# SERVICE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: get-svc
+spec:
+  selector:
+    app: get-depl
+  ports:
+    - protocol: TCP
+      port: 6789
+      targetPort: 6789
+
+#################### DATABASE ####################
+
+# SECRET
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: psql-secret
+type: Opaque
+data:
+  psql-username: cG9zdGdyZXM=
+  psql-password: cG9zdGdyZXM=
+
+# STATEFUL SET
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: psql-sset
+spec:
+  serviceName: psql-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psql-sset
+  template:
+    metadata:
+      labels:
+        app: psql-sset
+    spec:
+      containers:
+        - name: psql-sset
+          image: docker.io/hilbertshotel/psql
+          ports:
+          - containerPort: 5432
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: psql-secret
+                key: psql-username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: psql-secret
+                key: psql-password
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc
+
+# SERVICE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: psql-svc
+spec:
+  selector:
+    app: psql-sset
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+#################### STORAGE ####################
+
+# PERSISTENT VOLUME CLAIM
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+
+# PERSISTENT VOLUME
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+#################### INGRESS ####################
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: get-svc
+            port:
+              number: 6789
