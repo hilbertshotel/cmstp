@@ -6,4 +6,4 @@ CREATE TABLE test (
   data TEXT
 );
 
-INSERT INTO users (name) VALUES ('some test string');
+INSERT INTO test (data) VALUES ('some test string');

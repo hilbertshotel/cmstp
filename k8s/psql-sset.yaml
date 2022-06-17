@@ -1,23 +1,24 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: psql-depl
+  name: psql-sset
 spec:
+  serviceName: psql-svc
   replicas: 1
   selector:
     matchLabels:
-      app: psql-depl
+      app: psql-sset
   template:
     metadata:
       labels:
-        app: psql-depl
+        app: psql-sset
     spec:
       containers:
-      - name: psql-depl
-        image: docker.io/hilbertshotel/psql
-        ports:
-        - containerPort: 5432
-        env:
+        - name: psql-sset
+          image: docker.io/hilbertshotel/psql
+          ports:
+          - containerPort: 5432
+          env:
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
@@ -28,6 +29,13 @@ spec:
               secretKeyRef:
                 name: psql-secret
                 key: psql-password
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc
 ---
 apiVersion: v1
 kind: Service
@@ -35,7 +43,7 @@ metadata:
   name: psql-svc
 spec:
   selector:
-    app: psql-depl
+    app: psql-sset
   ports:
     - protocol: TCP
       port: 5432
